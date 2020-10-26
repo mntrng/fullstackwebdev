@@ -1,0 +1,29 @@
+body {
+  margin: 0;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+    sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+.error {
+  color: red;
+  font-weight: bold;
+  font-size: medium;
+  border: solid red 2px;
+  padding: 5px;
+  margin-bottom: 10px;
+  background-color: rgba(214, 207, 207, 0.945);
+  width: max-content
+}
+
+.good {
+  color: green;
+  font-weight: bold;
+  border: solid green 2px;
+  padding: 5px;
+  margin-bottom: 10px;
+  background-color: rgba(214, 207, 207, 0.945);
+  width: max-content
+}
