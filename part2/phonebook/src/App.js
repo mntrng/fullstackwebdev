@@ -40,6 +40,10 @@ const App = () => {
                .then(personObjectWithID => {
                  setPersons(persons.concat(personObjectWithID.data))
                  handleNotice(`Added ${newName}`, true)})
+               .catch(error => {
+                 console.log(error)
+                 handleNotice(error.response.data, false) 
+               })
     } else {
       if ((window.confirm(`${newName} exists in the phonebook, replace the old number with a new one?`))) {
         const updatedPerson = {...person, phone: newNumber}
@@ -50,7 +54,7 @@ const App = () => {
             handleNotice(`Updated number for ${person.name}`, true)
           })
           .catch((error) => {
-            console.log(error.response.data.error);
+            handleNotice(error.response.data, false)
           })
       }
     }
