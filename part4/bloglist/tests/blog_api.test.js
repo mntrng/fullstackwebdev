@@ -7,6 +7,7 @@ const bcrypt = require('bcrypt')
 
 const Blog = require('../models/blog')
 const User = require('../models/user')
+const { blogs } = require('../utils/apitest_helper')
 
 describe('tests for the blog api', () => {
 
@@ -37,50 +38,55 @@ describe('tests for the blog api', () => {
     })
 
     test('post operation', async () => {
+        const user = { username: 'root', password: 'sekret' }
         const newBlog = {
-            title  : 'Test',
-            author : 'Test 1',
-            url    : 'testxxx.com',
-            likes  : 111010101010
+            title  : 'Test',        author : 'Test 1',
+            url    : 'testxxx.com', likes  : 111010101010
         }
+
+        const login = await api.post('/api/login')
+                               .send(user)
+                               .expect(200)
+                               .expect('Content-Type', /application\/json/)
+
+        const token = login.body.token
 
         await api
         .post('/api/blogs')
         .send(newBlog)
+        .set('Authorization', `Bearer ${token}`)
         .expect(201)
         .expect('Content-Type', /application\/json/)
 
-        const data = await api.get('/api/blogs')
-        expect(data.body.length).toBe(helper.blogs.length + 1)
-        const newTitle = data.body[data.body.length-1].title
-        expect(newTitle).toEqual('Test')
+        const blogsAtEnd = await helper.blogsInDb()
+        expect(blogsAtEnd).toHaveLength(helper.blogs.length + 1)
     })
 
     test('if field likes is absent, default to 0', async () => {
-        const newBlog = {
-            title  : 'Test',
-            author : 'Test 1',
-            url    : 'testxxx.com',
-        }
+        const user = { username: 'root', password: 'sekret' }
+        const newBlog = { title : 'Test', author : 'Test 1', url : 'testxxx.com', }
+
+        const login = await api.post('/api/login')
+                                .send(user)
+                                .expect(200)
+                                .expect('Content-Type', /application\/json/)
+
+const token = login.body.token
 
         const postedBlog = await api
                         .post('/api/blogs')
                         .send(newBlog)
+                        .set('Authorization', `Bearer ${token}`)
                         .expect(201)
                         .expect('Content-Type', /application\/json/)
+                        
         expect(postedBlog.body.likes).toBe(0)
     })
 
     test('requests without required fields should fail', async () => {
-        const blogMissingTitle = new Blog({
-            author : 'Invalid 1',
-            url    : 'testxxx.com',
-        })
+        const blogMissingTitle = new Blog({ author : 'Invalid 1', url : 'testxxx.com' })
 
-        const blogMissingUrl = new Blog({
-            title: 'Invalid 2',
-            author : 'Invalid 2'
-        })
+        const blogMissingUrl = new Blog({ title: 'Invalid 2', author : 'Invalid 2' })
 
         let err1, err2
         try {
