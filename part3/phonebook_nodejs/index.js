@@ -81,7 +81,7 @@ app.put('/api/persons/:id', (request, response, next) => {
 })
 
 const errorHandler = (error, req, res, next) => {
-  console.log(error.message)
+
   if (error.name === 'CastError') {
     return res.status(400).send({ error: 'wrong id format' })
   } else if (error.name === 'ValidationError') {
