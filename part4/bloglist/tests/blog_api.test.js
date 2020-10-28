@@ -162,6 +162,23 @@ describe('when there is initially one user in db', () => {
         const usersAtEnd = await helper.usersInDb()
         expect(usersAtEnd).toHaveLength(usersAtStart.length)
     })
+
+    test('invalid password length', async () => {
+        const usersAtStart = await helper.usersInDb()
+    
+        const newUser = { username: 'xxx', name: 'Superuser', password: 'sa' }
+    
+        const result = await api
+          .post('/api/users')
+          .send(newUser)
+          .expect(400)
+          .expect('Content-Type', /application\/json/)
+
+        expect(result.body.error).toContain('Min length is 3')
+
+        const usersAtEnd = await helper.usersInDb()
+        expect(usersAtEnd).toHaveLength(usersAtStart.length)
+    })
 })
 
 afterAll(() => {
