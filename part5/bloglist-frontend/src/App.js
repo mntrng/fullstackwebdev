@@ -14,8 +14,8 @@ const App = () => {
 
   useEffect(() => {
     blogService.getAll()
-               .then(sortedBlogs => setBlogs(sortedBlogs)
-    )
+      .then(sortedBlogs => setBlogs(sortedBlogs)
+      )
   }, [])
 
   useEffect(() => {
@@ -49,7 +49,7 @@ const App = () => {
     try {
       window.localStorage.clear()
       setUser(null)
-      handleNotice('Logged out successfully', true) 
+      handleNotice('Logged out successfully', true)
     } catch (e) {
       console.log(e)
     }
@@ -65,7 +65,7 @@ const App = () => {
 
       handleNotice(`A new blog titled "${blogObject.title}" by ${blogObject.author} created successfully`, true)
     } catch (e) {
-      handleNotice("No new blog created!", false)    
+      handleNotice('No new blog created!', false)
     }
   }
 
@@ -92,7 +92,7 @@ const App = () => {
       handleNotice('Deleted', true)
     } catch (e) {
       handleNotice('Cannot delete!', false)
-    }    
+    }
   }
 
   const blogFormRef = useRef()
@@ -102,28 +102,28 @@ const App = () => {
 
       <Notification message = {notification} />
 
-      {user === null 
-        ? 
-          <div>
-            <h2>Blog Portal</h2>
-            <Togglable buttonLabel = "Log in">
-              <LoginForm handleLogin = {handleLogin} />
-            </Togglable>  
-          </div>
-        : 
-          <div>
-            <p>{user.name} logged-in <button onClick={handleLogOut} type="submit">Log out</button></p> 
+      {user === null
+        ?
+        <div>
+          <h2>Blog Portal</h2>
+          <Togglable buttonLabel = "Log in">
+            <LoginForm handleLogin = {handleLogin} />
+          </Togglable>
+        </div>
+        :
+        <div>
+          <p>{user.name} logged-in <button onClick={handleLogOut} type="submit">Log out</button></p>
 
-            <Togglable buttonLabel = "Create a new blog" ref={blogFormRef}>
-              <BlogForm handleBlogAddition = {handleBlogAddition} />
-            </Togglable>
+          <Togglable buttonLabel = "Create a new blog" ref={blogFormRef}>
+            <BlogForm handleBlogAddition = {handleBlogAddition} />
+          </Togglable>
 
-            <h2>Blogs</h2>
-            {blogs.sort((a, b) => b.likes - a.likes)
-                  .map(blog => <Blog key={blog.id} blog={blog} user={user}
-                                     handleLike={handleLike} handleDeleteBlog={handleBlogDelete}/>
+          <h2>Blogs</h2>
+          {blogs.sort((a, b) => b.likes - a.likes)
+            .map(blog => <Blog key={blog.id} blog={blog} user={user}
+              handleLike={handleLike} handleDeleteBlog={handleBlogDelete}/>
             )}
-          </div>
+        </div>
       }
     </div>
   )

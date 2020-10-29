@@ -1,11 +1,12 @@
 import React, { useState } from 'react'
+import PropTypes from 'prop-types'
 
 const Blog = ({ blog, handleLike, handleDeleteBlog, user }) => {
 
   const [displayAll, setDisplayAll] = useState(false)
 
-  const hideWhenVisible = { display: displayAll ? 'none' : ''}
-  const showWhenVisible = { display: displayAll ? '' : 'none'}
+  const hideWhenVisible = { display: displayAll ? 'none' : '' }
+  const showWhenVisible = { display: displayAll ? '' : 'none' }
 
   const toggleDisplayState = () => {
     setDisplayAll(!displayAll)
@@ -13,7 +14,7 @@ const Blog = ({ blog, handleLike, handleDeleteBlog, user }) => {
 
   const addLike = event => {
     event.preventDefault()
-    const newBlogObject = {...blog, likes: blog.likes + 1}
+    const newBlogObject = { ...blog, likes: blog.likes + 1 }
 
     handleLike(newBlogObject)
   }
@@ -59,6 +60,12 @@ const Blog = ({ blog, handleLike, handleDeleteBlog, user }) => {
       </div>
     </div>
   )
+}
+
+Blog.propTypes = {
+
+  blog: PropTypes.object.isRequired
+
 }
 
 export default Blog
