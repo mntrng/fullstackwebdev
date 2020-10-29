@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 
-const Blog = ({ blog, handleLike }) => {
+const Blog = ({ blog, handleLike, handleDeleteBlog, user }) => {
 
   const [displayAll, setDisplayAll] = useState(false)
 
@@ -18,6 +18,24 @@ const Blog = ({ blog, handleLike }) => {
     handleLike(newBlogObject)
   }
 
+  const deleteBlog = event => {
+    event.preventDefault()
+
+    if (window.confirm(`Delete ${blog.title} by ${blog.author}?`)) {
+      handleDeleteBlog(blog.id)
+    }
+  }
+
+  const displayDeleteButton = () => {
+    if (user.username === blog.user.username) {
+      return (
+        <div>
+          <button id='deleteB' onClick={deleteBlog}>Delete</button>
+        </div>
+      )
+    }
+  }
+
   const styling = {
     border: 'solid 1px',
     borderRadius: '5px',
@@ -33,11 +51,12 @@ const Blog = ({ blog, handleLike }) => {
       </div>
 
       <div style={showWhenVisible}>
-        {blog.title} by {blog.author} <button id= 'hideB' onClick={toggleDisplayState}>Hide</button> <br/>
+        {blog.title} by {blog.author} <button id='hideB' onClick={toggleDisplayState}>Hide</button> <br/>
         URL: {blog.url} <br/>
         Likes: {blog.likes} <button id='likeB' onClick={addLike}>Like</button> <br/>
-        Creator: {blog.user.name}
-        </div>
+        Creator: {blog.user.name} <br/>
+        {displayDeleteButton()}
+      </div>
     </div>
   )
 }

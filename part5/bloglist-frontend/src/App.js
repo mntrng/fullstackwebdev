@@ -85,6 +85,16 @@ const App = () => {
     }
   }
 
+  const handleBlogDelete = async blogId => {
+    try {
+      await blogService.remove(blogId)
+      setBlogs(blogs.filter(blog => blog.id !== blogId))
+      handleNotice('Deleted', true)
+    } catch (e) {
+      handleNotice('Cannot delete!', false)
+    }    
+  }
+
   const blogFormRef = useRef()
 
   return (
@@ -110,7 +120,8 @@ const App = () => {
 
             <h2>Blogs</h2>
             {blogs.sort((a, b) => b.likes - a.likes)
-                  .map(blog => <Blog key={blog.id} blog={blog} handleLike={handleLike} />
+                  .map(blog => <Blog key={blog.id} blog={blog} user={user}
+                                     handleLike={handleLike} handleDeleteBlog={handleBlogDelete}/>
             )}
           </div>
       }
