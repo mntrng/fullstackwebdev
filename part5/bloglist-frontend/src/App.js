@@ -106,7 +106,7 @@ const App = () => {
         ?
         <div>
           <h2>Blog Portal</h2>
-          <Togglable buttonLabel = "Log in">
+          <Togglable buttonLabel = "Magic Gate">
             <LoginForm handleLogin = {handleLogin} />
           </Togglable>
         </div>
