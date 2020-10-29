@@ -5,9 +5,11 @@ import loginService from './services/login'
 
 const App = () => {
   const [blogs, setBlogs] = useState([])
-  const [showAll, setShowAll] = useState(true)
   const [username, setUsername] = useState('') 
   const [password, setPassword] = useState('')
+  const [blogTitle, setBlogTitle] = useState('')
+  const [blogAuthor, setBlogAuthor] = useState('')
+  const [blogUrl, setBlogUrl] = useState('')
   const [user, setUser] = useState(null)
 
   useEffect(() => {
@@ -56,35 +58,71 @@ const App = () => {
     }
   }
 
+  const handleBlogAddition = async (event) => {
+    event.preventDefault()
+    try {
+      const blogObject = {
+        title: blogTitle,
+        author: blogAuthor,
+        url: blogUrl,
+        user: user
+      }
+
+      const newBlog = await blogService.create(blogObject)
+      setBlogs(blogs.concat(newBlog))
+      setBlogAuthor('')
+      setBlogTitle('')
+      setBlogUrl('')
+    } catch (e) {
+    
+    }
+  }
+
   const loginForm = () => {
 
     return (
-    <div><h4>Log in to application</h4>
-    <form onSubmit={handleLogin}>
-    <div>
-      Username
-        <input
-        type="text" value={username} name="Username"
-        onChange={({ target }) => setUsername(target.value)} />
-    </div>
-    <div>
-      Password
-        <input
-        type="password" value={password} name="Password"
-        onChange={({ target }) => setPassword(target.value)} />
-    </div>
-    <button type="submit">Login</button>
-    </form></div>
+      <div><h4>Log in to application</h4>
+      <form onSubmit={handleLogin}>
+      <div>
+        Username
+          <input
+          type="text" value={username} name="Username"
+          onChange={({ target }) => setUsername(target.value)} />
+      </div>
+      <div>
+        Password
+          <input
+          type="password" value={password} name="Password"
+          onChange={({ target }) => setPassword(target.value)} />
+      </div>
+      <button type="submit">Login</button>
+      </form></div>
   )}
 
   const blogForm = () => {
     return (
+      <div><h4>Create a new blog</h4>
+      <form onSubmit={handleBlogAddition}>
       <div>
-      <h2>Blogs</h2>
-      {blogs.map(blog =>
-        <Blog key={blog.id} blog={blog} />
-      )}
+        Title
+          <input
+          type="text" value={blogTitle} name="Title"
+          onChange={({ target }) => setBlogTitle(target.value)} />
       </div>
+      <div>
+        Author
+          <input
+          type="text" value={blogAuthor} name="Title"
+          onChange={({ target }) => setBlogAuthor(target.value)} />
+      </div>
+      <div>
+        URL
+          <input
+          type="text" value={blogUrl} name="Title"
+          onChange={({ target }) => setBlogUrl(target.value)} />
+      </div>
+      <button type="submit">Create</button>
+      </form></div>
   )}
 
   return (
@@ -94,8 +132,14 @@ const App = () => {
         loginForm()  : 
         <div>
           <p>{user.name} logged-in <button onClick={handleLogOut} type="submit">Log out</button></p> 
+
           {blogForm()}
-        </div>
+
+          <h2>Blogs</h2>
+          {blogs.map(blog =>
+            <Blog key={blog.id} blog={blog} />
+          )}
+      </div>
       }
     </div>
   )
