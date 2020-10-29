@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react'
 import Blog from './components/Blog'
 import blogService from './services/blogs'
 import loginService from './services/login'
+import Notification from './components/Notification'
 
 const App = () => {
   const [blogs, setBlogs] = useState([])
@@ -11,6 +12,7 @@ const App = () => {
   const [blogAuthor, setBlogAuthor] = useState('')
   const [blogUrl, setBlogUrl] = useState('')
   const [user, setUser] = useState(null)
+  const [notification, setNotification] = useState(null)
 
   useEffect(() => {
     blogService.getAll().then(initialBlogs =>
@@ -43,8 +45,11 @@ const App = () => {
       setUser(user)
       setUsername('')
       setPassword('')
+
+      handleNotice('Logged in successfully', true)
     } catch (e) {
       console.log(e)
+      handleNotice('Wrong username and/or password!', false)
     }
   }
 
@@ -52,7 +57,8 @@ const App = () => {
     event.preventDefault()
     try {
       window.localStorage.clear()
-      setUser(null)    
+      setUser(null)
+      handleNotice('Logged out successfully', true) 
     } catch (e) {
       console.log(e)
     }
@@ -73,9 +79,17 @@ const App = () => {
       setBlogAuthor('')
       setBlogTitle('')
       setBlogUrl('')
+      handleNotice(`A new blog titled "${blogTitle}" by ${blogAuthor} created successfully`, true)
     } catch (e) {
-    
+      handleNotice("No new blog created!", false)    
     }
+  }
+
+  const handleNotice = (message, status) => {
+    setNotification( [message, status] )
+    setTimeout(() => {
+      setNotification(null)
+    }, 5000)
   }
 
   const loginForm = () => {
@@ -127,6 +141,8 @@ const App = () => {
 
   return (
     <div>
+
+      <Notification message = {notification} />
 
       {user === null ?
         loginForm()  : 
