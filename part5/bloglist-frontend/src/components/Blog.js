@@ -1,8 +1,9 @@
 import React, { useState } from 'react'
 import PropTypes from 'prop-types'
 
-const Blog = ({ blog, handleLike, handleDeleteBlog, user }) => {
+const Blog = ( {blog, user, handleLike, handleDeleteBlog} ) => {
 
+  
   const [displayAll, setDisplayAll] = useState(false)
 
   const hideWhenVisible = { display: displayAll ? 'none' : '' }
@@ -15,7 +16,7 @@ const Blog = ({ blog, handleLike, handleDeleteBlog, user }) => {
   const addLike = event => {
     event.preventDefault()
     const newBlogObject = { ...blog, likes: blog.likes + 1 }
-
+    console.log('handleLike: ', handleLike)
     handleLike(newBlogObject)
   }
 
@@ -51,7 +52,7 @@ const Blog = ({ blog, handleLike, handleDeleteBlog, user }) => {
         {blog.title} by {blog.author} <button id='viewB' onClick={toggleDisplayState}>View</button>
       </div>
 
-      <div style={showWhenVisible}>
+      <div className='forTest' style={showWhenVisible}>
         {blog.title} by {blog.author} <button id='hideB' onClick={toggleDisplayState}>Hide</button> <br/>
         URL: {blog.url} <br/>
         Likes: {blog.likes} <button id='likeB' onClick={addLike}>Like</button> <br/>
@@ -59,6 +60,7 @@ const Blog = ({ blog, handleLike, handleDeleteBlog, user }) => {
         {displayDeleteButton()}
       </div>
     </div>
+   
   )
 }
 
