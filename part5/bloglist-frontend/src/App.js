@@ -81,7 +81,7 @@ const App = () => {
       await blogService.update(newBlogObject)
       setBlogs(blogs.map(blog => blog.id === newBlogObject.id ? newBlogObject : blog))
     } catch (e) {
-      handleNotice('No liked added!', false)
+      handleNotice('No like added!', false)
     }
   }
 
