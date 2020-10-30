@@ -58,10 +58,10 @@ test('renders url and like when view button is clicked', () => {
 
 test('click like twice', () => {
 
-  const mockHandler = jest.fn(handleLike)
+  const mockHandler = jest.fn()
 
   const component = render(
-      <Blog blog={blog} user={user} addLike={mockHandler}/>
+      <Blog blog={blog} user={user} handleLike={mockHandler}/>
   )
 
   blog = { ...blog, likes: blog.likes + 1 }
