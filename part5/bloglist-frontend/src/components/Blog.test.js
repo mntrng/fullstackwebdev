@@ -5,7 +5,6 @@ import '@testing-library/jest-dom/extend-expect'
 import { render, fireEvent } from '@testing-library/react'
 import Blog from './Blog'
 import BlogForm from './BlogForm'
-import handleLike from '../App'
 
 let blog, user
 
@@ -70,4 +69,26 @@ test('click like twice', () => {
   fireEvent.click(btn)
   fireEvent.click(btn)
 
+})
+
+test('test blog form submission', () => {
+
+  const mockHandler = jest.fn()
+
+  const component = render(
+    <BlogForm handleBlogAddition={mockHandler} />
+  )
+
+  const form = component.container.querySelector('form')
+  const title = component.container.querySelector('#title')
+  const author = component.container.querySelector('#author')
+  const url = component.container.querySelector('#url')
+
+  fireEvent.change(title, { target: { value: 'test123' } })
+  fireEvent.change(author, { target: { value: 'testhaha' } })
+  fireEvent.change(url, { target: { value:'xxxx.com' } })
+  fireEvent.submit(form)
+ 
+  expect(mockHandler.mock.calls.length).toEqual(1)
+  expect(mockHandler.mock.calls[0][0].author).toEqual('testhaha')
 })

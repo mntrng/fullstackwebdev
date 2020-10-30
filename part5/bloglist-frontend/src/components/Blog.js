@@ -3,7 +3,6 @@ import PropTypes from 'prop-types'
 
 const Blog = ( {blog, user, handleLike, handleDeleteBlog} ) => {
 
-  
   const [displayAll, setDisplayAll] = useState(false)
 
   const hideWhenVisible = { display: displayAll ? 'none' : '' }
@@ -16,7 +15,7 @@ const Blog = ( {blog, user, handleLike, handleDeleteBlog} ) => {
   const addLike = event => {
     event.preventDefault()
     const newBlogObject = { ...blog, likes: blog.likes + 1 }
-    console.log('handleLike: ', handleLike)
+
     handleLike(newBlogObject)
   }
 
@@ -60,7 +59,6 @@ const Blog = ( {blog, user, handleLike, handleDeleteBlog} ) => {
         {displayDeleteButton()}
       </div>
     </div>
-   
   )
 }
 
