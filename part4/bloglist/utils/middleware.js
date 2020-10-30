@@ -23,8 +23,8 @@ const errorHandler = (error, request, response, next) => {
 }
 
 const unknownEndpoint = (request, response) => {
-	response.status(404).send({ Error: 'Not found' });
-};
+	response.status(404).send({ Error: 'Not found' })
+}
 
 module.exports = {
     errorHandler,
