@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import PropTypes from 'prop-types'
 
-const Blog = ( {blog, user, handleLike, handleDeleteBlog} ) => {
+const Blog = ( { blog, user, handleLike, handleDeleteBlog } ) => {
 
   const [displayAll, setDisplayAll] = useState(false)
 
@@ -47,7 +47,7 @@ const Blog = ( {blog, user, handleLike, handleDeleteBlog} ) => {
 
   return (
     <div style={styling}>
-      <div style={hideWhenVisible}>
+      <div className='finalTest' style={hideWhenVisible}>
         {blog.title} by {blog.author} <button id='viewB' onClick={toggleDisplayState}>View</button>
       </div>
 

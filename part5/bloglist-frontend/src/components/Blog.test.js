@@ -88,7 +88,7 @@ test('test blog form submission', () => {
   fireEvent.change(author, { target: { value: 'testhaha' } })
   fireEvent.change(url, { target: { value:'xxxx.com' } })
   fireEvent.submit(form)
- 
+
   expect(mockHandler.mock.calls.length).toEqual(1)
   expect(mockHandler.mock.calls[0][0].author).toEqual('testhaha')
 })

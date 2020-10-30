@@ -22,8 +22,8 @@ const App = () => {
     const loggedUserJSON = window.localStorage.getItem('loggedUser')
     if (loggedUserJSON) {
       const user = JSON.parse(loggedUserJSON)
-      setUser(user)
       blogService.setToken(user.token)
+      setUser(user)
     }
   }, [])
 
@@ -38,6 +38,7 @@ const App = () => {
       )
 
       setUser(user)
+      blogService.setToken(user.token)
       handleNotice('Logged in successfully', true)
     } catch (e) {
       handleNotice('Wrong username and/or password!', false)
