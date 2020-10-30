@@ -51,7 +51,7 @@ const Blog = ({ blog, handleLike, handleDeleteBlog, user }) => {
         {blog.title} by {blog.author} <button id='viewB' onClick={toggleDisplayState}>View</button>
       </div>
 
-      <div style={showWhenVisible}>
+      <div className='forTest' style={showWhenVisible}>
         {blog.title} by {blog.author} <button id='hideB' onClick={toggleDisplayState}>Hide</button> <br/>
         URL: {blog.url} <br/>
         Likes: {blog.likes} <button id='likeB' onClick={addLike}>Like</button> <br/>
