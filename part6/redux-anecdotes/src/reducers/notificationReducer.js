@@ -1,3 +1,5 @@
+var t
+
 const notificationReducer = (state = '', action) => {
 
     switch (action.type) {
@@ -16,7 +18,9 @@ export const setNotification = (msg, length) => {
         data: {msg}
       })
 
-      setTimeout(() => {
+      clearTimeout(t)
+
+      t = setTimeout(() => {
         dispatch({
           type: 'NOTIFICATION',
           data: ''
