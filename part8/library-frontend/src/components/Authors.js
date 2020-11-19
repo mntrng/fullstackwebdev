@@ -1,6 +1,7 @@
 import { useMutation, useQuery } from '@apollo/client'
 import React from 'react'
 import { ALL_AUTHORS, EDIT_AUTHOR } from '../queries'
+import EditYear from './EditYear'
 
 const Authors = (props) => {
   const allAuthorResults = useQuery(ALL_AUTHORS)
@@ -10,15 +11,6 @@ const Authors = (props) => {
 
   if (!props.show || allAuthorResults.loading) {
     return null
-  }
-
-  const submit = async (event) => {
-    event.preventDefault()
-
-    let author = event.target.name.value
-    let born = parseInt(event.target.born.value)
-
-    await editAuthor({ variables: { 'name': author, 'setBornTo': born } })
   }
 
   try {
@@ -47,28 +39,8 @@ const Authors = (props) => {
             )}
           </tbody>
         </table>
-              
-        <h2>Set Birthyear</h2>
-          <form onSubmit={submit}>
-              <div>
-              Author Name &nbsp;
-              <select name='name'>
-                <option>Select an author</option>
-                {authors.map(a => {
-                  return (
-                    <option key={a.name} >
-                      {a.name}
-                    </option>
-                  )
-                })}
-              </select>
-              </div>
-              <div>
-              Born &nbsp;
-              <input type='number' name='born' />
-              </div>
-              <button type='submit'>Update Author</button>
-          </form>
+
+        {props.token && <EditYear editAuthor={editAuthor} authors={authors}/>}
       </div>
   )
   } catch (error) {
