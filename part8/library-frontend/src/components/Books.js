@@ -1,40 +1,54 @@
-import { useQuery } from '@apollo/client'
-import React from 'react'
-import { ALL_BOOKS } from '../queries'
+import React, { useState, useEffect } from 'react'
+import BookTable from './BookTable'
 
-const Books = (props) => {
-  const allBookResults = useQuery(ALL_BOOKS)
-  if (!props.show || allBookResults.loading) {
+const Books = ({show, allBookResults}) => {
+  const [genres, setGenres] = useState([])
+  const [genreOption, setGenreOption] = useState('')
+  const [books, setBooks] = useState([])
+  const [selectedBooks, setSelectedBooks] = useState([])
+
+  useEffect(() => {
+    if (allBookResults.data) {
+      const bookData = allBookResults.data.allBooks
+      bookData.forEach(book => {
+        book.genres.forEach(genre => {
+          if (!genres.includes(genre)) {
+            genres.push(genre)
+          }
+        })
+      })
+
+      genres.push('all genres')
+      setGenres(genres)
+      setBooks(bookData)
+      setGenreOption('all genres')
+    }
+  }, [allBookResults, genres])
+
+  useEffect(() => {
+    if (genreOption === 'all genres') {
+      setSelectedBooks(books)
+    } else {
+      setSelectedBooks(books.filter(book => book.genres.includes(genreOption)))
+    }
+  }, [books, genreOption])
+
+  if (!show) {
     return null
   }
 
   try {
-    const books = allBookResults.data.allBooks
-
     return (
       <div>
-        <h2>Books</h2>
-  
-        <table>
-          <tbody>
-            <tr>
-              <th></th>
-              <th>
-                Author
-              </th>
-              <th>
-                Published
-              </th>
-            </tr>
-            {books.map(a =>
-              <tr key={a.title}>
-                <td>{a.title}</td>
-                <td>{a.author.name}</td>
-                <td>{a.published}</td>
-              </tr>
-            )}
-          </tbody>
-        </table>
+        <BookTable
+          selectedBooks = {selectedBooks}
+        />
+
+        {genres.map(genre => 
+          <button key={genre} onClick={() => setGenreOption(genre)}>
+            {genre}
+          </button>
+        )}
       </div>
     )
   } catch (error) {
