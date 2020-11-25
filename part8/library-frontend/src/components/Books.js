@@ -23,7 +23,7 @@ const Books = ({show, allBookResults}) => {
       setBooks(bookData)
       setGenreOption('all genres')
     }
-  }, [allBookResults, genres])
+  }, [allBookResults])
 
   useEffect(() => {
     if (genreOption === 'all genres') {

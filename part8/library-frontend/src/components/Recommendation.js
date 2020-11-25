@@ -1,29 +1,12 @@
-import React, {useState, useEffect} from 'react'
-import { useQuery } from '@apollo/client'
+import React from 'react'
 import BookTable from './BookTable'
-import { CURRENT_USER } from '../queries'
 
-const Recommendation = ({show, allBookResults}) => {
-    const [favBooks, setFavBooks] = useState([])
-    const currentUser = useQuery(CURRENT_USER)
-
-    useEffect(() => {
-
-        if (currentUser.data) {
-            var favBooks = []
-            allBookResults.data.allBooks.forEach(book => {
-                if (book.genres.includes(currentUser.data.me.favoriteGenre)) {
-                  favBooks.push(book)
-                }
-            })
-
-            setFavBooks(favBooks)
-        }
-
-    }, [allBookResults])
+const Recommendation = ({show, allBookResults, currentUser}) => {
 
     if (!show || currentUser.loading || allBookResults.loading) {
         return null
+    } else {
+        var favBooks = allBookResults.data.allBooks.filter(book => book.genres.includes(currentUser.data.me.favoriteGenre))
     }
 
     return (

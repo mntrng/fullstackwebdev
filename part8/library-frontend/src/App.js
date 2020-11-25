@@ -5,7 +5,7 @@ import Books from './components/Books'
 import NewBook from './components/NewBook'
 import LoginForm from './components/LoginForm'
 import Recommendation from './components/Recommendation'
-import { ALL_BOOKS } from './queries'
+import { ALL_BOOKS, CURRENT_USER } from './queries'
 
 const App = () => {
   const [page, setPage] = useState('authors')
@@ -13,6 +13,7 @@ const App = () => {
 
   const client = useApolloClient()
   const allBookResults = useQuery(ALL_BOOKS)
+  const currentUser = useQuery(CURRENT_USER)
 
   useEffect(() => {
     setToken(localStorage.getItem('loggedinuser'))
@@ -55,7 +56,7 @@ const App = () => {
       />
 
       <Recommendation
-        show={page === 'recommend'} allBookResults={allBookResults}
+        show={page === 'recommend'} allBookResults={allBookResults} currentUser={currentUser}
       />
     </div>
   )
