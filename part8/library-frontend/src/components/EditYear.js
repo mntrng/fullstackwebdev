@@ -1,6 +1,6 @@
 import React from 'react'
 
-const EditYear = ({editAuthor, authors}) => {
+const EditYear = ({ editAuthor, authors }) => {
     const submit = async (event) => {
         event.preventDefault()
 

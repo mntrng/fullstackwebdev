@@ -96,7 +96,6 @@ const resolvers = {
     },
 
     me: (root, args, context) => {
-      console.log(context)
       return context.currentUser
     }
   },
