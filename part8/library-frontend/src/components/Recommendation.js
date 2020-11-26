@@ -1,7 +1,9 @@
-import React from 'react'
+import { useLazyQuery, useQuery } from '@apollo/client'
+import React, { useState, useEffect } from 'react'
+import { ALL_BOOKS } from '../queries'
 import BookTable from './BookTable'
 
-const Recommendation = ({show, allBookResults, currentUser}) => {
+const Recommendation = ({show, currentUser, allBookResults}) => {
 
     if (!show || currentUser.loading || allBookResults.loading) {
         return null
