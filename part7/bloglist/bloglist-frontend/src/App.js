@@ -10,6 +10,8 @@ import { useDispatch, useSelector } from 'react-redux'
 import { setNotification } from './reducers/notificationReducer'
 import { createBlog, initBlogs } from './reducers/blogReducer'
 import { setUser } from './reducers/userReducer'
+import { Switch, Route } from "react-router-dom"
+import Users from './components/Users'
 
 const App = () => {
   const blogs = useSelector(state => state.blogs)
@@ -109,6 +111,10 @@ const App = () => {
         </div>
         :
         <div>
+          {/* <Switch>
+            <Route path="/users"> <Users /> </Route>
+            <Route path="/"> <Users /> </Route>
+          </Switch> */}
           <p>{user.name} logged-in <button onClick={handleLogOut} type="submit">Log out</button></p>
 
           <Togglable buttonLabel = "Create a new blog" ref={blogFormRef}>
@@ -120,6 +126,8 @@ const App = () => {
             .map(blog => <Blog key={blog.id} blog={blog} user={user}
               handleLike={handleLike} handleDeleteBlog={handleBlogDelete}/>
             )}
+
+          <div><Users /></div>
         </div>
       }
     </div>
