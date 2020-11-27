@@ -1,22 +1,12 @@
-import userService from "../services/users"
-import React, { useEffect, useState } from "react";
-import { Container, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow } from "@material-ui/core";
+import React from "react";
+import { Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow } from "@material-ui/core";
+import { Link } from "react-router-dom";
 
-const Users = () => {
-    const [users, setUsers] = useState([])
-
-    useEffect(() => {
-        (async () => {
-            const users_ = await userService.getAll()
-            setUsers(users_)
-        })()
-    }, [])
+const Users = ({users}) => {
 
     return (
-        <Container>
         <div>
             <h2>Users</h2>
-
             <TableContainer component={Paper}>
                 <Table>
                     <TableHead>
@@ -26,26 +16,18 @@ const Users = () => {
                         </TableRow>
                     </TableHead>
                     <TableBody>
-                        
-                <tr>
-                    <th>User</th>
-                    <th>Number of blogs</th>
-                </tr>
-    
-                {users.map(user => {
-                    return (
-                        <tr key={user.username}>
-                            <td>{user.name}</td>
-                            <td>{user.blogs.length}</td>
-                        </tr>
-                    )
-                })
-                }
+                        {users.map(user => {
+                            return (
+                                <TableRow key={user.username}>
+                                    <TableCell><Link to={`/users/${user.id}`}>{user.name}</Link></TableCell>
+                                    <TableCell>{user.blogs.length}</TableCell>
+                                </TableRow>
+                            )})
+                        }
                     </TableBody>
                 </Table>
             </TableContainer>
         </div>
-        </Container>
     )
 }
 

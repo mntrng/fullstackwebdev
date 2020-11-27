@@ -1,25 +1,28 @@
 import React, { useEffect, useRef } from 'react'
-import Blog from './components/Blog'
+import { useDispatch, useSelector } from 'react-redux'
+import BlogPage from './components/BlogPage'
+import Notification from './components/Notification'
+import LoginForm from './components/LoginForm'
+import Users from './components/Users'
 import blogService from './services/blogs'
 import loginService from './services/login'
-import Notification from './components/Notification'
-import BlogForm from './components/BlogForm'
-import Togglable from './components/Togglable'
-import LoginForm from './components/LoginForm'
-import { useDispatch, useSelector } from 'react-redux'
 import { setNotification } from './reducers/notificationReducer'
 import { createBlog, initBlogs } from './reducers/blogReducer'
 import { setUser } from './reducers/userReducer'
-import { Switch, Route } from "react-router-dom"
-import Users from './components/Users'
+import { Switch, Route, Link, useRouteMatch } from "react-router-dom"
+import { AppBar, Button, Container, Grid, Toolbar, Typography } from "@material-ui/core";
+import User from './components/User'
+import { initUsers } from './reducers/usersReducer'
 
 const App = () => {
   const blogs = useSelector(state => state.blogs)
   const user = useSelector(state => state.user)
+  const users = useSelector(state => state.users)
   const dispatch = useDispatch()
 
   useEffect(() => {
     dispatch(initBlogs())
+    dispatch(initUsers())
   }, [dispatch])
 
   useEffect(() => {
@@ -95,42 +98,48 @@ const App = () => {
   }
 
   const blogFormRef = useRef()
+  const match = useRouteMatch('/users/:id')
+  const user_ = match ? users.find(user => user.id === match.params.id)
+                      : null
 
   return (
-    <div>
-
-      <Notification />
-
-      {user === null
-        ?
-        <div>
-          <h2>Blog Portal</h2>
-          <Togglable buttonLabel = "Magic Gate">
-            <LoginForm handleLogin = {handleLogin}/>
-          </Togglable>
-        </div>
-        :
-        <div>
-          {/* <Switch>
-            <Route path="/users"> <Users /> </Route>
-            <Route path="/"> <Users /> </Route>
-          </Switch> */}
-          <p>{user.name} logged-in <button onClick={handleLogOut} type="submit">Log out</button></p>
-
-          <Togglable buttonLabel = "Create a new blog" ref={blogFormRef}>
-            <BlogForm handleBlogAddition = {handleBlogAddition} />
-          </Togglable>
-
-          <h2>Blogs</h2>
-          {blogs.sort((a, b) => b.likes - a.likes)
-            .map(blog => <Blog key={blog.id} blog={blog} user={user}
-              handleLike={handleLike} handleDeleteBlog={handleBlogDelete}/>
-            )}
-
-          <div><Users /></div>
-        </div>
-      }
-    </div>
+    <Container>
+      <div>
+        <Notification />
+        
+        {!user ? <LoginForm handleLogin = {handleLogin}/>
+               : 
+                 <div>
+                    <AppBar position="sticky" style={{ background: '#8bc34a' }}>
+                      <Toolbar>
+                        <Grid container justify="space-between">
+                          <Grid item>
+                            <Button color="inherit" component={Link} to="/">Home</Button>
+                            <Button color="inherit" component={Link} to="/users">Users</Button>
+                          </Grid>
+                          <Grid item>
+                            <Typography display="inline" style={{ marginRight: 16 }}><b>{user.name}</b> logged in.</Typography>
+                            <Button color="secondary" variant="contained" component={Link} onClick={handleLogOut}>Log out</Button>
+                          </Grid>
+                        </Grid>
+                      </Toolbar>
+                    </AppBar>
+                    
+                    <Switch>
+                      <Route path="/users">
+                        <Users users={users} />
+                      </Route>
+                      <Route path="/users/:id">
+                        <User user={user_}/>
+                      </Route>
+                      <Route path='/'>
+                        <BlogPage blogs={blogs} handleLike={handleLike} handleBlogDelete={handleBlogDelete} user={user} handleBlogAddition={handleBlogAddition}/>
+                      </Route>
+                    </Switch>
+                 </div>
+        }
+      </div>
+    </Container>
   )
 }
 
