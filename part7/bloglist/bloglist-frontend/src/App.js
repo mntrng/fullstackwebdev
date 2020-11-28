@@ -114,7 +114,7 @@ const App = () => {
                       <Toolbar>
                         <Grid container justify="space-between">
                           <Grid item>
-                            <Button color="inherit" component={Link} to="/">Home</Button>
+                            <Button color="inherit" component={Link} to="/">Blogs</Button>
                             <Button color="inherit" component={Link} to="/users">Users</Button>
                           </Grid>
                           <Grid item>
