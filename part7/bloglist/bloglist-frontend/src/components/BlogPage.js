@@ -1,12 +1,10 @@
 import Blog from './Blog'
 import BlogForm from './BlogForm'
 import Togglable from './Togglable'
-import React, { useRef } from 'react'
+import React from 'react'
 
-const BlogPage = ( { blogs, handleLike, handleBlogDelete, user, handleBlogAddition } ) => {
+const BlogPage = ( { blogs, handleLike, handleBlogDelete, user, handleBlogAddition, blogFormRef } ) => {
     
-    const blogFormRef = useRef()
-
     return (
         <div>
             <Togglable buttonLabel = "Create a new blog" ref={blogFormRef}>

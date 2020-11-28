@@ -32,7 +32,7 @@ const App = () => {
       blogService.setToken(user.token)
       dispatch(setUser(user))
     }
-  }, [dispatch])
+  }, [])
 
   const handleLogin = async (username, password) => {
     try {
@@ -126,14 +126,15 @@ const App = () => {
                     </AppBar>
                     
                     <Switch>
-                      <Route path="/users">
+                      <Route exact path="/users">
                         <Users users={users} />
                       </Route>
                       <Route path="/users/:id">
                         <User user={user_}/>
                       </Route>
                       <Route path='/'>
-                        <BlogPage blogs={blogs} handleLike={handleLike} handleBlogDelete={handleBlogDelete} user={user} handleBlogAddition={handleBlogAddition}/>
+                        <BlogPage blogs={blogs} handleLike={handleLike} blogFormRef={blogFormRef}
+                                  handleBlogDelete={handleBlogDelete} user={user} handleBlogAddition={handleBlogAddition}/>
                       </Route>
                     </Switch>
                  </div>
