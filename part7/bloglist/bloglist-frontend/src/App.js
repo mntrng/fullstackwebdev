@@ -4,6 +4,7 @@ import BlogPage from './components/BlogPage'
 import Notification from './components/Notification'
 import LoginForm from './components/LoginForm'
 import Users from './components/Users'
+import Blog from './components/Blog'
 import blogService from './services/blogs'
 import loginService from './services/login'
 import { setNotification } from './reducers/notificationReducer'
@@ -13,6 +14,7 @@ import { Switch, Route, Link, useRouteMatch } from "react-router-dom"
 import { AppBar, Button, Container, Grid, Toolbar, Typography } from "@material-ui/core";
 import User from './components/User'
 import { initUsers } from './reducers/usersReducer'
+import Home from './components/Home'
 
 const App = () => {
   const blogs = useSelector(state => state.blogs)
@@ -32,6 +34,7 @@ const App = () => {
       blogService.setToken(user.token)
       dispatch(setUser(user))
     }
+    // eslint-disable-next-line
   }, [])
 
   const handleLogin = async (username, password) => {
@@ -78,29 +81,13 @@ const App = () => {
     dispatch(setNotification([message, status]))
   }
 
-  const handleLike = async newBlogObject => {
-    try {
-      await blogService.update(newBlogObject)
-      dispatch(initBlogs(blogs.map(blog => blog.id === newBlogObject.id ? newBlogObject : blog)))
-    } catch (e) {
-      handleNotice('No like added!', false)
-    }
-  }
-
-  const handleBlogDelete = async blogId => {
-    try {
-      await blogService.remove(blogId)
-      dispatch(initBlogs(blogs.filter(blog => blog.id !== blogId)))
-      handleNotice('Deleted', true)
-    } catch (e) {
-      handleNotice('Cannot delete!', false)
-    }
-  }
-
   const blogFormRef = useRef()
   const match = useRouteMatch('/users/:id')
   const user_ = match ? users.find(user => user.id === match.params.id)
                       : null
+  const matchBlog = useRouteMatch('/blogs/:id')
+  const blog_ = matchBlog ? blogs.find(blog => blog.id === matchBlog.params.id)
+                          : null
 
   return (
     <Container>
@@ -110,16 +97,17 @@ const App = () => {
         {!user ? <LoginForm handleLogin = {handleLogin}/>
                : 
                  <div>
-                    <AppBar position="sticky" style={{ background: '#8bc34a' }}>
+                    <AppBar position="sticky" style={{ background: '#8bc34a', marginBottom: 25 }}>
                       <Toolbar>
                         <Grid container justify="space-between">
                           <Grid item>
-                            <Button color="inherit" component={Link} to="/">Blogs</Button>
+                            <Button color="inherit" component={Link} to="/">Home</Button>
+                            <Button color="inherit" component={Link} to="/blogs">Blogs</Button>
                             <Button color="inherit" component={Link} to="/users">Users</Button>
                           </Grid>
                           <Grid item>
                             <Typography display="inline" style={{ marginRight: 16 }}><b>{user.name}</b> logged in.</Typography>
-                            <Button color="secondary" variant="contained" component={Link} onClick={handleLogOut}>Log out</Button>
+                            <Button color="secondary" variant="contained" onClick={handleLogOut}>Log out</Button>
                           </Grid>
                         </Grid>
                       </Toolbar>
@@ -132,10 +120,15 @@ const App = () => {
                       <Route path="/users/:id">
                         <User user={user_}/>
                       </Route>
-                      <Route path='/'>
-                        <BlogPage blogs={blogs} handleLike={handleLike} blogFormRef={blogFormRef}
-                                  handleBlogDelete={handleBlogDelete} user={user} handleBlogAddition={handleBlogAddition}/>
+                      <Route exact path='/blogs'>
+                        <BlogPage blogs={blogs} blogFormRef={blogFormRef} handleBlogAddition={handleBlogAddition}/>
                       </Route>
+                      <Route path="/blogs/:id">
+                        <Blog user={user} blog={blog_} handleNotice={handleNotice}/>
+                      </Route>       
+                      <Route path="/">
+                        <Home />
+                      </Route>                 
                     </Switch>
                  </div>
         }

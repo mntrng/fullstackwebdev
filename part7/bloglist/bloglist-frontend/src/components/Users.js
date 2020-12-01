@@ -11,8 +11,8 @@ const Users = ({users}) => {
                 <Table>
                     <TableHead>
                         <TableRow>
-                            <TableCell fontWeight="fontWeightMedium">User</TableCell>
-                            <TableCell fontWeight="fontWeightMedium">Number of blogs</TableCell>
+                            <TableCell>User</TableCell>
+                            <TableCell>Number of blogs</TableCell>
                         </TableRow>
                     </TableHead>
                     <TableBody>

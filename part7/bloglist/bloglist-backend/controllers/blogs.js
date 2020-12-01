@@ -57,7 +57,17 @@ blogsRouter.put('/:id', async (request, response) => {
 
     // runValidators: turn on validation on update
     const updatedBlog = await Blog.findByIdAndUpdate(request.params.id, newInfo, { new: true, runValidators: true })
-    response.json(updatedBlog.toJSON())
+    response.json(updatedBlog)
+})
+
+blogsRouter.post('/:id/comments', async (request, response) => {
+    const content = request.body
+    if(content.comment) {
+        const updatedBlog = await Blog.findByIdAndUpdate(request.params.id, { $addToSet: { comments: content.comment } }, { new: true })
+        response.json(updatedBlog)
+    } else {
+        response.status(400).json({ error: 'No comment added!' })
+    }
 })
 
 module.exports = blogsRouter

@@ -15,13 +15,12 @@ const User = ({ user }) => {
 
             <List>
                 {user.blogs.map(blog =>
-                    <ListItem dense='true'>
+                    <ListItem dense key={blog.id}>
                         <ListItemIcon><BookIcon /></ListItemIcon>
-                        <ListItemText key={blog.id}> {blog.title} </ListItemText>
+                        <ListItemText> {blog.title} </ListItemText>
                     </ListItem>
                 )}
             </List>
-
         </div>
     )
 }

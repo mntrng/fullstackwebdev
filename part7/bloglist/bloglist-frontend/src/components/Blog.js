@@ -1,62 +1,73 @@
-import React, { useState } from 'react'
+import { Button, Card, TextField } from '@material-ui/core'
+import React from 'react'
+import { useHistory } from 'react-router-dom'
+import { useDispatch } from 'react-redux'
+import { addComment, deleteBlog, likeBlog } from '../reducers/blogReducer'
 
-const Blog = ( { blog, user, handleLike, handleDeleteBlog } ) => {
+const Blog = ( { blog, user, handleNotice } ) => {
 
-  const [displayAll, setDisplayAll] = useState(false)
+  const history = useHistory()
+  const dispatch = useDispatch()
 
-  const hideWhenVisible = { display: displayAll ? 'none' : '' }
-  const showWhenVisible = { display: displayAll ? '' : 'none' }
-
-  const toggleDisplayState = () => {
-    setDisplayAll(!displayAll)
+  if (!blog) {
+    return null
   }
 
-  const addLike = event => {
-    event.preventDefault()
-    const newBlogObject = { ...blog, likes: blog.likes + 1 }
-
-    handleLike(newBlogObject)
-  }
-
-  const deleteBlog = event => {
-    event.preventDefault()
-
+  const removeBlog = async blog => {
     if (window.confirm(`Delete ${blog.title} by ${blog.author}?`)) {
-      handleDeleteBlog(blog.id)
+      try {
+        await dispatch(deleteBlog(blog.id))
+        handleNotice('Deleted successfully.', true)
+        history.push('/blogs')
+      } catch (e) {
+        console.log(e)
+        handleNotice('Cannot delete!', false)
+      }
     }
   }
 
-  const displayDeleteButton = () => {
-    if (user.username === blog.user.username) {
-      return (
-        <div>
-          <button id='deleteB' onClick={deleteBlog}>Delete</button>
-        </div>
-      )
-    }
+  const createComment = (id, event) => {
+    event.preventDefault()
+    dispatch(addComment(id, event.target.comment.value))
+    handleNotice('Your comment has been added!', true)
+    event.target.reset()
   }
 
-  const styling = {
-    border: 'solid 1px',
-    borderRadius: '5px',
-    padding: '5px',
-    marginBottom: '10px',
-    width: '40%'
+  const handleLike = async () => {
+    try {
+      await dispatch(likeBlog({ ...blog, likes: blog.likes + 1 }))
+      // dispatch(initBlogs(blogs.map(blog => blog.id === newBlogObject.id ? newBlogObject : blog)))
+    } catch (e) {
+      handleNotice('No like added!', false)
+    }
   }
 
   return (
-    <div style={styling}>
-      <div className='finalTest' style={hideWhenVisible}>
-        {blog.title} by {blog.author} <button id='viewB' onClick={toggleDisplayState}>View</button>
-      </div>
+    <div>
+      <Card style={{ padding: 20 }}>
+        <h2>{blog.title} by {blog.author}</h2>
+        URL: <a href={blog.url} target="_blank" rel="noopener noreferrer">{blog.url}</a><br/>
+        Likes: {blog.likes} <br/>
+        Added by {blog.user.name} <br/>
+        <h4>Comments</h4>
 
-      <div className='forTest' style={showWhenVisible}>
-        {blog.title} by {blog.author} <button id='hideB' onClick={toggleDisplayState}>Hide</button> <br/>
-        URL: {blog.url} <br/>
-        Likes: {blog.likes} <button id='likeB' onClick={addLike}>Like</button> <br/>
-        Creator: {blog.user.name} <br/>
-        {displayDeleteButton()}
-      </div>
+        <form onSubmit={ (event) => createComment(blog.id, event) }>
+          <TextField required name="comment" variant="filled" size="small" 
+                     type="text" label="Comment"/>
+          <Button variant="contained" type="submit" color="primary">Add</Button>
+        </form>
+
+        <ul>
+          {blog.comments && blog.comments.map(cmt => (
+            <li key={cmt}>{cmt}</li>
+          ))}
+        </ul>
+
+        <div style={{ marginTop: 15 }}>
+          <Button variant="contained" size="small" color="primary" onClick={handleLike}>Like</Button>
+          {user.username === blog.user.username && <Button variant="contained" size="small" color="secondary" onClick={() => removeBlog(blog)}>Delete</Button>}
+        </div>
+      </Card>
     </div>
   )
 }

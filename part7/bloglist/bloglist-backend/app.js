@@ -1,4 +1,5 @@
 const express = require('express')
+const helmet = require("helmet");
 const app = express()
 const cors = require('cors')
 require('express-async-errors')
@@ -22,6 +23,8 @@ mongoose.connect(config.MONGODB_URI, { useNewUrlParser: true, useUnifiedTopology
 app.use(cors())
 app.use(express.json())
 app.use(middleware.tokenExtractor)
+app.use(helmet())
+app.use(logger.logger)
 
 app.use('/api/blogs', blogsRouter)
 app.use('/api/users', usersRouter)

@@ -1,3 +1,4 @@
+import { Button, TextField } from '@material-ui/core'
 import React, { useState } from 'react'
 
 const BlogForm = ({ handleBlogAddition }) => {
@@ -22,25 +23,17 @@ const BlogForm = ({ handleBlogAddition }) => {
 
   return (
     <form onSubmit={addBlog}>
-      <div>
-            Title
-        <input
-          type="text" value={blogTitle} id="title" name="Title"
-          onChange={({ target }) => setBlogTitle(target.value)} />
-      </div>
-      <div>
-            Author
-        <input
-          type="text" value={blogAuthor} id="author" name="Author"
-          onChange={({ target }) => setBlogAuthor(target.value)} />
-      </div>
-      <div>
-            URL
-        <input
-          type="text" value={blogUrl} id="url" name="Url"
-          onChange={({ target }) => setBlogUrl(target.value)} />
-      </div>
-      <button type="submit" id="createB">Create</button>
+      <TextField required label="Title" variant="filled" size="small" 
+                 type="text" value={blogTitle} id="title"
+                 onChange={({ target }) => setBlogTitle(target.value)} /> <br />
+      <TextField required label="Author" variant="filled" size="small" 
+                 type="text" value={blogAuthor} id="author"
+                 onChange={({ target }) => setBlogAuthor(target.value)} /> <br />
+      <TextField required label="URL" variant="filled" size="small" 
+                 type="text" value={blogUrl} id="url"
+                 onChange={({ target }) => setBlogUrl(target.value)} /> <br />
+
+      <Button variant="contained" type="submit" color="primary" style={{ marginTop: 15 }}>Create</Button>
     </form>
   )
 }
