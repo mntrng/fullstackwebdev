@@ -13,7 +13,7 @@ const Blog = ( { blog, user, handleNotice } ) => {
     return null
   }
 
-  const removeBlog = async blog => {
+  const removeBlog = async () => {
     if (window.confirm(`Delete ${blog.title} by ${blog.author}?`)) {
       try {
         await dispatch(deleteBlog(blog.id))
@@ -26,9 +26,9 @@ const Blog = ( { blog, user, handleNotice } ) => {
     }
   }
 
-  const createComment = (id, event) => {
+  const createComment = event => {
     event.preventDefault()
-    dispatch(addComment(id, event.target.comment.value))
+    dispatch(addComment({...blog, comments: [...blog.comments, event.target.comment.value]}))
     handleNotice('Your comment has been added!', true)
     event.target.reset()
   }
@@ -36,7 +36,6 @@ const Blog = ( { blog, user, handleNotice } ) => {
   const handleLike = async () => {
     try {
       await dispatch(likeBlog({ ...blog, likes: blog.likes + 1 }))
-      // dispatch(initBlogs(blogs.map(blog => blog.id === newBlogObject.id ? newBlogObject : blog)))
     } catch (e) {
       handleNotice('No like added!', false)
     }
@@ -51,7 +50,7 @@ const Blog = ( { blog, user, handleNotice } ) => {
         Added by {blog.user.name} <br/>
         <h4>Comments</h4>
 
-        <form onSubmit={ (event) => createComment(blog.id, event) }>
+        <form onSubmit={ (event) => createComment(event) }>
           <TextField required name="comment" variant="filled" size="small" 
                      type="text" label="Comment"/>
           <Button variant="contained" type="submit" color="primary">Add</Button>
@@ -65,7 +64,7 @@ const Blog = ( { blog, user, handleNotice } ) => {
 
         <div style={{ marginTop: 15 }}>
           <Button variant="contained" size="small" color="primary" onClick={handleLike}>Like</Button>
-          {user.username === blog.user.username && <Button variant="contained" size="small" color="secondary" onClick={() => removeBlog(blog)}>Delete</Button>}
+          {user.username === blog.user.username && <Button variant="contained" size="small" color="secondary" onClick={removeBlog}>Delete</Button>}
         </div>
       </Card>
     </div>

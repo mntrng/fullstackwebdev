@@ -1,3 +1,4 @@
+import { Button, TextField } from '@material-ui/core'
 import React, { useState } from 'react'
 import Togglable from './Togglable'
 
@@ -20,18 +21,16 @@ const LoginForm = ( { handleLogin } ) => {
         <h4>Log in to this awesome Application</h4>
         <form onSubmit={login}>
           <div>
-          Username
-            <input
-              type="text" value={username} id="username" name="Username"
-              onChange={({ target }) => setUsername(target.value)} />
+            <TextField label="Username" variant="filled" size="small" 
+                      type="text" value={username} id="username" name="Username"
+                      onChange={({ target }) => setUsername(target.value)} />
           </div>
           <div>
-          Password
-            <input
-              type="password" value={password} id="password" name="Password"
-              onChange={({ target }) => setPassword(target.value)} />
+            <TextField label="Password" variant="filled" size="small" 
+                      type="password" value={password} id="password" name="Password"
+                      onChange={({ target }) => setPassword(target.value)} />
           </div>
-          <button type="submit" id="loginB">Login</button>
+          <Button type="submit" variant="contained" color="primary">Login</Button>
         </form>
       </Togglable>
     </div>
