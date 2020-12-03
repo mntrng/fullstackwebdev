@@ -1,3 +1,26 @@
+interface InputValues {
+    array: number[]
+    target: number
+}
+
+const parseArguments = (args: string[]): InputValues => {
+    if (args.length < 4) {
+        throw new Error('Not enough arguments')
+    } else {
+        let arr = args.slice(2)
+        
+        if (arr.every( element => !isNaN(Number(element)) )) {
+            const list = arr.map(element => Number(element))
+            return {
+                target: list[0],
+                array: list.slice(1)
+            }
+        } else {
+            throw new Error('Provided values were not numbers!');
+        }
+    }
+}
+
 interface Result { 
     periodLength: number,
     trainingDays: number,
@@ -37,4 +60,5 @@ export const calculateExercises = (data: number[], target: number): Result => {
     }
 }
 
-console.log(calculateExercises([3, 0, 2, 4.5, 0, 3, 1], 2))
+const { target, array } = parseArguments(process.argv)
+console.log(calculateExercises(array, target))
