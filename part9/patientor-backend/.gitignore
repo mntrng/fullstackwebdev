@@ -1,7 +1,7 @@
 /node_modules
 /coverage
 /build
-/src/**/dist
+dist/
 
 # misc
 .DS_Store
@@ -10,7 +10,6 @@
 .env.test.local
 .env.production.local
 .eslintrc
-.gitignore
 
 npm-debug.log*
 yarn-debug.log*
