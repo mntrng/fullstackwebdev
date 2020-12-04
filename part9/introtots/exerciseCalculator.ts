@@ -16,7 +16,7 @@ const parseArguments = (args: string[]): InputValues => {
                 array: list.slice(1)
             }
         } else {
-            throw new Error('Provided values were not numbers!');
+            throw new Error('Provided values were not numbers!')
         }
     }
 }
