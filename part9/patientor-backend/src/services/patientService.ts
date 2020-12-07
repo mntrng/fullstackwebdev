@@ -18,7 +18,7 @@ export const addPatient = (entry: NewPatientEntry): PatientEntry => {
         id: id,
         ...entry
     };
-    
     patients.push(newPatientEntry);
+    console.log(patients);
     return newPatientEntry;
 };
