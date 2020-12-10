@@ -1,21 +1,37 @@
-import { useLazyQuery, useQuery } from '@apollo/client'
+import { useLazyQuery } from '@apollo/client'
 import React, { useState, useEffect } from 'react'
 import { ALL_BOOKS } from '../queries'
 import BookTable from './BookTable'
 
-const Recommendation = ({show, currentUser, allBookResults}) => {
+const Recommendation = ({ show, currentUser }) => {
 
-    if (!show || currentUser.loading || allBookResults.loading) {
+    const favGenre = currentUser.data?.me?.favoriteGenre
+    const [getBooks, results] = useLazyQuery(ALL_BOOKS, {
+        fetchPolicy: "network-only"
+    })
+    const [favoriteBooks, setFavoriteBooks] = useState([])
+
+    useEffect(() => {
+        if (results.data) {
+            setFavoriteBooks(results.data.allBooks)
+        }
+    }, [setFavoriteBooks, results])
+
+    useEffect(() => {
+        if (currentUser.data) {
+          getBooks({ variables: { genre: favGenre } })
+        }
+    }, [getBooks, currentUser, favGenre])
+
+    if (!show) {
         return null
-    } else {
-        var favBooks = allBookResults.data.allBooks.filter(book => book.genres.includes(currentUser.data.me.favoriteGenre))
     }
 
     return (
         <div>
             <h2>Books</h2>
-            <p>Books that you might like according to your genre preference: <b>{currentUser.data.me.favoriteGenre}</b></p>
-            <BookTable selectedBooks = {favBooks} />
+            <p>Books that you might like according to your genre preference: <b>{favGenre}</b></p>
+            <BookTable selectedBooks = {favoriteBooks} />
         </div>
     )
 }

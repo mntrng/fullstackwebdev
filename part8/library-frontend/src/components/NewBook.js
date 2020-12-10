@@ -10,7 +10,15 @@ const NewBook = (props) => {
   const [genres, setGenres] = useState([])
 
   const [ addBook ] = useMutation(ADD_BOOK, {
-    refetchQueries: [{ query: ALL_BOOKS }, { query: ALL_AUTHORS }]
+    refetchQueries: [{ query: ALL_BOOKS }, { query: ALL_AUTHORS }],
+
+    update: (store, response) => {
+      props.updateCacheWith(response.data.addBook)
+    },
+
+    onCompleted: () => {
+      props.setPage('books')
+    }
   })
 
   if (!props.show) {
@@ -25,8 +33,6 @@ const NewBook = (props) => {
       variables: { title, author, published, genres } 
     })
     
-    console.log('add book...')
-
     setTitle('')
     setPublished('')
     setAuthor('')
@@ -40,7 +46,7 @@ const NewBook = (props) => {
   }
 
   return (
-    <div>
+    <div style={{marginTop: 25}}>
       <form onSubmit={submit}>
         <div>
           Title

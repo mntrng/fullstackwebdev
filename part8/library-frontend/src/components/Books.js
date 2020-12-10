@@ -15,15 +15,17 @@ const Books = ({show, allBookResults}) => {
           if (!genres.includes(genre)) {
             genres.push(genre)
           }
+          if (!genres.includes('all genres')) {
+            genres.push('all genres')
+          }
         })
       })
-
-      genres.push('all genres')
+      
       setGenres(genres)
       setBooks(bookData)
       setGenreOption('all genres')
     }
-  }, [allBookResults])
+  }, [allBookResults, genres])
 
   useEffect(() => {
     if (genreOption === 'all genres') {
