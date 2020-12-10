@@ -15,12 +15,13 @@ const Books = ({show, allBookResults}) => {
           if (!genres.includes(genre)) {
             genres.push(genre)
           }
-          if (!genres.includes('all genres')) {
-            genres.push('all genres')
-          }
         })
       })
-      
+
+      if (!genres.includes('all genres')) {
+        genres.push('all genres')
+      }
+
       setGenres(genres)
       setBooks(bookData)
       setGenreOption('all genres')
