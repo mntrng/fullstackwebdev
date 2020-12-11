@@ -1,7 +1,7 @@
+/* eslint-disable @typescript-eslint/explicit-module-boundary-types */
 /* eslint-disable @typescript-eslint/restrict-template-expressions */
 /* eslint-disable @typescript-eslint/no-unsafe-member-access */
 /* eslint-disable @typescript-eslint/no-explicit-any */
-// eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
 import { Gender, NewPatientEntry } from "./types";
 
 const toNewPatientEntry = (object: any): NewPatientEntry => {
@@ -10,7 +10,8 @@ const toNewPatientEntry = (object: any): NewPatientEntry => {
         dateOfBirth: parseDate(object.dateOfBirth),
         ssn: parseSsn(object.ssn),
         gender: parseGender(object.gender),
-        occupation: parseOcc(object.occupation)
+        occupation: parseOcc(object.occupation),
+        entries: []
     };
     return newPatientEntry;
 };

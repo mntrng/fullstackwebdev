@@ -19,6 +19,16 @@ export const addPatient = (entry: NewPatientEntry): PatientEntry => {
         ...entry
     };
     patients.push(newPatientEntry);
-    console.log(patients);
     return newPatientEntry;
+};
+
+export const findPatientById = (id: string): PatientEntry | undefined => {
+    const patient = patients.find(p => p.id === id);
+    if (!patient) {
+        return undefined;
+    } else if (!('entries' in patient)) {
+        const patientEntries = { ...patient, entries: [] };
+        return patientEntries;
+    }
+    return patient;
 };
