@@ -1,8 +1,10 @@
+/* eslint-disable @typescript-eslint/no-unsafe-return */
+/* eslint-disable @typescript-eslint/no-unsafe-call */
 /* eslint-disable @typescript-eslint/explicit-module-boundary-types */
 /* eslint-disable @typescript-eslint/restrict-template-expressions */
 /* eslint-disable @typescript-eslint/no-unsafe-member-access */
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { Gender, NewPatientEntry } from "./types";
+import { Gender, NewPatientEntry, Entry, HospitalEntry, HealthCheckEntry } from "./types";
 
 const toNewPatientEntry = (object: any): NewPatientEntry => {
     const newPatientEntry: NewPatientEntry = {
@@ -11,7 +13,7 @@ const toNewPatientEntry = (object: any): NewPatientEntry => {
         ssn: parseSsn(object.ssn),
         gender: parseGender(object.gender),
         occupation: parseOcc(object.occupation),
-        entries: []
+        entries: parseEntry(object.entries)
     };
     return newPatientEntry;
 };
@@ -28,9 +30,44 @@ const isGender = (param: any): param is Gender => {
     return Object.values(Gender).includes(param);
 };
 
+const isHospitalEntry = (entry: any): entry is HospitalEntry => {
+    if (entry.type === "Hospital") {
+        return true;
+    }
+    return false;
+};
+
+const isHealthCheckEntry = (entry: any): entry is HealthCheckEntry => {
+    if (entry.type === "HealthCheck") {
+        return true;
+    }
+    return false;
+};
+
+const isOccupationalHealthcareEntry = (entry: any): entry is HealthCheckEntry => {
+    if (entry.type === "OccupationalHealthcare") {
+        return true;
+    }
+    return false;
+};
+
+const parseEntry = (entries: any): Entry[] => {
+    return entries.map((entry: any) => {
+        if (isHealthCheckEntry(entry)) {
+            return entry;
+        } else if (isHospitalEntry(entry)) {
+            return entry;
+        } else if (isOccupationalHealthcareEntry(entry)) {
+            return entry;
+        } else {
+            throw new Error(`Wrong entry type!`);
+        }
+    });
+};
+
 const parseName = (name: any): string => {
     if (!name || !isString(name)) {
-        throw new Error(`Incorrect or missing name:  ${name}`);
+        throw new Error(`Incorrect or missing name: ${name}`);
     }
     return name;
 };
@@ -48,7 +85,6 @@ const parseSsn = (ssn: any): string => {
     }
     return ssn;
 };
-
 
 const parseGender = (gender: any): Gender => {
     if (!gender || !isGender(gender)) {
