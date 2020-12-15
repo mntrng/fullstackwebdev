@@ -25,9 +25,10 @@ const App: React.FC = () => {
         console.error(e);
       }
     };
+
     fetchPatientList();
   }, [dispatch]);
-
+  
   return (
     <div className="App">
       <Router>
