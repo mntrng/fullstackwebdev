@@ -3,7 +3,8 @@ import axios from 'axios';
 import { useParams } from 'react-router-dom';
 import { Diagnosis, Entry, Patient } from '../types';
 import { apiBaseUrl } from '../constants';
-import { Icon } from 'semantic-ui-react';
+import { Icon, Segment } from 'semantic-ui-react';
+import EntryInfo from '../components/EntryInfo';
 
 const PatientInfo: React.FC = () => {
     const { id } = useParams<{ id: string }>();
@@ -39,6 +40,11 @@ const PatientInfo: React.FC = () => {
     if (!patient || !diagnosisList) {
         return null;
     } else {
+
+        const styling = {
+            marginBottom: "15px"
+        };
+
         return (
             <div>
                 <h1>
@@ -57,11 +63,15 @@ const PatientInfo: React.FC = () => {
                 <h3>Entries</h3>
                 <div>
                     {patient.entries.map((entry: Entry) => (
-                        <div key={entry.id}>
-                            <p>{entry.date} {': '} <i>{entry.description}</i></p>
+                        <div key={entry.id} style={styling}>
+                            <Segment>
+                                <EntryInfo entry={entry}/>
+                            </Segment>
+
+                            {/* <p>{entry.date} {': '} <i>{entry.description}</i></p>
                             <ul>
                                 {entry.diagnosisCodes?.map((code: string) => <li key={code}><b>{code}</b> {': '} { diagnosisList.filter(d => d.code === code)[0].name }</li>)}
-                            </ul>
+                            </ul> */}
                         </div>
                     ))}
                 </div>
