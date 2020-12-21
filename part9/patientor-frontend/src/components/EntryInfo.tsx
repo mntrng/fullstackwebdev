@@ -19,6 +19,7 @@ const OccupationalHealthcare: React.FC<{ entry: OccupationalHealthcareEntry }> =
     <div>
         <h3>{entry.date} <Icon name="stethoscope" /></h3>
         <p> <i>{entry.description}</i> </p>
+        <Label color='black'>Employer: {entry.employerName}</Label>
         {entry.sickLeave && (
           <div>
             <Label>Sick Leave from <i>{entry.sickLeave.startDate}</i> to <i>{entry.sickLeave.endDate}</i></Label>

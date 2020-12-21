@@ -57,6 +57,12 @@ export interface OccupationalHealthcareEntry extends BaseEntry {
   };
 }
 
+export enum EntryOption {
+  Hospital = 'Hospital',
+  OccupationalHealthcare = 'OccupationalHealthcare',
+  HealthCheck = 'HealthCheck'
+}
+
 export type Entry =
 | HospitalEntry
 | OccupationalHealthcareEntry

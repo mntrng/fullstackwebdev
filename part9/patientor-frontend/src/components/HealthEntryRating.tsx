@@ -12,6 +12,18 @@ export const HealthEntryRating: React.FC<{ healthRating: number }> = ({ healthRa
         case 1:
             return (
                 <div>
+                    <Icon name='heart' color='yellow' />
+                </div>
+            );
+        case 2:
+            return (
+                <div>
+                    <Icon name='heart' color='orange' />
+                </div>
+            );
+        case 3:
+            return (
+                <div>
                     <Icon name='heart' color='red' />
                 </div>
             );
