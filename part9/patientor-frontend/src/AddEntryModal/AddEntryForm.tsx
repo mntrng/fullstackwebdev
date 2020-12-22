@@ -5,6 +5,7 @@ import { Field, Formik, Form } from "formik";
 import { TextField, SelectField, EntrySelection, DiagnosisSelection, NumberField } from "./FormField";
 import { Entry, EntryOption } from "../types";
 import { useStateValue } from "../state";
+import moment from "moment";
 
 export type EntryFormValues = Omit<Entry, "id">;
 
@@ -29,27 +30,37 @@ export const AddEntryForm: React.FC<Props> = ({ onSubmit, onCancel }) => {
         description: "",
         date: "",
         specialist: "",
-        diagnosisCodes: []
+        diagnosisCodes: [],
+        healthCheckRating: ""
       }}
       onSubmit={onSubmit}
       validate={values => {
-        const requiredError = "Field is required";
+        const requiredError = (input: string) => `Field ${input} is required!`;        
         const errors: { [field: string]: string } = {};
+
         if (!values.type) {
-          errors.type = requiredError;
+          errors.type = requiredError('type');
         }
         if (!values.description) {
-          errors.description = requiredError;
+          errors.description = requiredError('description');
         }
         if (!values.date) {
-          errors.date = requiredError;
+          errors.date = requiredError('date');
+        } else if (!moment(values.date, 'YYYY-MM-DD', true).isValid()) {
+          errors.date = 'Must be in the form YYYY-MM-DD';
         }
         if (!values.specialist) {
-          errors.specialist = requiredError;
+          errors.specialist = requiredError('specialist');
+        }
+        if (!values.healthCheckRating) {
+          errors.healthCheckRating = requiredError('health check rating');          
+        } else if (Number(values.healthCheckRating) < 0 || Number(values.healthCheckRating) > 3) {
+          errors.healthCheckRating = 'Must be an integer between 0 and 3!'; 
         }
         return errors;
       }}
     >
+
       {({ isValid, dirty, setFieldValue, setFieldTouched }) => {
         return (
           <Form className="form ui">
