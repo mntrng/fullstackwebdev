@@ -1,27 +1,34 @@
 import React from 'react';
 import axios from 'axios';
 import { useParams } from 'react-router-dom';
-import { Entry, HealthCheckEntry, Patient } from '../types';
+import { Entry, HealthCheckEntry, HospitalEntry, Patient } from '../types';
 import { apiBaseUrl } from '../constants';
 import { Button, Icon, List, Segment } from 'semantic-ui-react';
 import EntryInfo from '../components/EntryInfo';
-import AddEntryModal from '../AddEntryModal';
-import { EntryFormValues } from '../AddEntryModal/AddEntryForm';
+import { HealthCheckEntryFormValues } from '../AddEntryModal/AddHealthCheckEntryForm';
 import { addEntry, useStateValue } from "../state";
+import { AddHealthCheckEntryModal, AddHospitalEntryModal } from '../AddEntryModal';
+import { HospitalEntryFormValues } from '../AddEntryModal/AddHospitalEntryForm';
 
 const PatientInfo: React.FC = () => {
     const [{ diagnosisList }, dispatch] = useStateValue();
     const { id } = useParams<{ id: string }>();
     const [patient, setPatient] = React.useState<Patient | undefined>();
 
-    const [modalOpen, setModalOpen] = React.useState<boolean>(false);
     const [error, setError] = React.useState<string | undefined>();
     const [entries, setEntries] = React.useState<Entry[]>();
   
-    const openModal = (): void => setModalOpen(true);
-  
-    const closeModal = (): void => {
-      setModalOpen(false);
+    const [modalHCOpen, setHCModalOpen] = React.useState<boolean>(false);
+    const openHCModal = (): void => setHCModalOpen(true);
+    const closeHCModal = (): void => {
+      setHCModalOpen(false);
+      setError(undefined);
+    };
+
+    const [modalHOpen, setHModalOpen] = React.useState<boolean>(false);
+    const openHModal = (): void => setHModalOpen(true);
+    const closeHModal = (): void => {
+      setHModalOpen(false);
       setError(undefined);
     };
 
@@ -39,7 +46,7 @@ const PatientInfo: React.FC = () => {
         getPatientInfo();
     }, [id]);
 
-    const addNewEntry = async (values: EntryFormValues) => {
+    const addNewHealthCheckEntry = async (values: HealthCheckEntryFormValues) => {
         try {
           const { data: newEntry } = await axios.post<HealthCheckEntry>(
             `${apiBaseUrl}/patients/${id}/entries`,
@@ -50,7 +57,24 @@ const PatientInfo: React.FC = () => {
             entries.push(newEntry);
             setEntries(entries);
           }
-          closeModal();
+          closeHCModal();
+        } catch (e) {
+          setError(e.response.data.error);
+        }
+    };
+
+    const addNewHospitalEntry = async (values: HospitalEntryFormValues) => {
+        try {
+          const { data: newEntry } = await axios.post<HospitalEntry>(
+            `${apiBaseUrl}/patients/${id}/entries`,
+            values
+          );
+          dispatch(addEntry(newEntry));
+          if (entries) {
+            entries.push(newEntry);
+            setEntries(entries);
+          }
+          closeHModal();
         } catch (e) {
           setError(e.response.data.error);
         }
@@ -79,13 +103,20 @@ const PatientInfo: React.FC = () => {
                     <b>Occupation</b>: {patient.occupation}
                 </p>
                 <h3>Entries</h3>
-                <AddEntryModal
-                    modalOpen={modalOpen}
-                    onSubmit={addNewEntry}
+                <AddHealthCheckEntryModal
+                    modalOpen={modalHCOpen}
+                    onSubmit={addNewHealthCheckEntry}
                     error={error}
-                    onClose={closeModal}
+                    onClose={closeHCModal}
                 />
-                <Button color='teal' style={styling} onClick={() => openModal()}>Add New Entry</Button>
+                <AddHospitalEntryModal
+                    modalOpen={modalHOpen}
+                    onSubmit={addNewHospitalEntry}
+                    error={error}
+                    onClose={closeHModal}
+                />
+                <Button color='orange' style={styling} onClick={() => openHCModal()}>Add Health Check Entry</Button>
+                <Button color='teal' style={styling} onClick={() => openHModal()}>Add Hospital Entry</Button>
                 <div>
                     {patient.entries.map((entry: Entry) => (
                         <div key={entry.id} style={styling}>

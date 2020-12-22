@@ -2,45 +2,38 @@ import React from "react";
 import { Grid, Button } from "semantic-ui-react";
 import { Field, Formik, Form } from "formik";
 
-import { TextField, SelectField, EntrySelection, DiagnosisSelection, NumberField } from "./FormField";
+import { TextField, DiagnosisSelection } from "./FormField";
 import { Entry, EntryOption } from "../types";
 import { useStateValue } from "../state";
 import moment from "moment";
 
-export type EntryFormValues = Omit<Entry, "id">;
+export type HospitalEntryFormValues = Omit<Entry, "id">;
 
 interface Props {
-  onSubmit: (values: EntryFormValues) => void;
+  onSubmit: (values: HospitalEntryFormValues) => void;
   onCancel: () => void;
 }
 
-const entryOptions: EntrySelection[] = [
-  { value: EntryOption.HealthCheck, label: "Health Check" },
-  { value: EntryOption.Hospital, label: "Hospitalization" },
-  { value: EntryOption.OccupationalHealthcare, label: "Occupational Healthcare" },
-];
-
-export const AddEntryForm: React.FC<Props> = ({ onSubmit, onCancel }) => {
+export const AddHospitalEntryForm: React.FC<Props> = ({ onSubmit, onCancel }) => {
   const [{ diagnosisList }] = useStateValue();
   
   return (
     <Formik
       initialValues={{
-        type: EntryOption.HealthCheck,
+        type: EntryOption.Hospital,
         description: "",
         date: "",
         specialist: "",
         diagnosisCodes: [],
-        healthCheckRating: ""
+        discharge: {
+          date: "",
+          criteria: ""
+        }
       }}
       onSubmit={onSubmit}
       validate={values => {
         const requiredError = (input: string) => `Field ${input} is required!`;        
         const errors: { [field: string]: string } = {};
-
-        if (!values.type) {
-          errors.type = requiredError('type');
-        }
         if (!values.description) {
           errors.description = requiredError('description');
         }
@@ -52,10 +45,13 @@ export const AddEntryForm: React.FC<Props> = ({ onSubmit, onCancel }) => {
         if (!values.specialist) {
           errors.specialist = requiredError('specialist');
         }
-        if (!values.healthCheckRating) {
-          errors.healthCheckRating = requiredError('health check rating');          
-        } else if (Number(values.healthCheckRating) < 0 || Number(values.healthCheckRating) > 3) {
-          errors.healthCheckRating = 'Must be an integer between 0 and 3!'; 
+        if (!values.discharge.date) {
+          errors.dischargeDate = requiredError('discharge date');
+        } else if (!moment(values.discharge.date, 'YYYY-MM-DD', true).isValid()) {
+          errors.dischargeDate = 'Must be in the form YYYY-MM-DD';
+        }
+        if (!values.discharge.criteria) {
+          errors.dischargeCriteria = requiredError('discharge criteria');
         }
         return errors;
       }}
@@ -64,11 +60,6 @@ export const AddEntryForm: React.FC<Props> = ({ onSubmit, onCancel }) => {
       {({ isValid, dirty, setFieldValue, setFieldTouched }) => {
         return (
           <Form className="form ui">
-            <SelectField
-              label="Visit Type"
-              name="visitType"
-              options={entryOptions}
-            />
             <Field
               label="Description"
               placeholder="Description"
@@ -93,13 +84,17 @@ export const AddEntryForm: React.FC<Props> = ({ onSubmit, onCancel }) => {
               diagnoses={Object.values(diagnosisList)}
             />
             <Field
-              label="Health Rating"
-              name="healthCheckRating"
-              component={NumberField}
-              min={0}
-              max={3}
+              label="Discharge Date"
+              placeholder="YYYY-MM-DD"
+              name="discharge.date"
+              component={TextField}
             />
-            
+            <Field
+              label="Criteria"
+              placeholder="Criteria"
+              name="discharge.criteria"
+              component={TextField}
+            />      
             <Grid>
               <Grid.Column floated="left" width={5}>
                 <Button type="button" onClick={onCancel} color="red">
@@ -124,4 +119,4 @@ export const AddEntryForm: React.FC<Props> = ({ onSubmit, onCancel }) => {
   );
 };
 
-export default AddEntryForm;
+export default AddHospitalEntryForm;
