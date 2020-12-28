@@ -1,4 +1,5 @@
 import React from 'react'
+import { Button } from 'semantic-ui-react'
 
 const EditYear = ({ editAuthor, authors }) => {
     const submit = async (event) => {
@@ -11,7 +12,7 @@ const EditYear = ({ editAuthor, authors }) => {
     }
 
     return (
-        <div>  
+        <div>
             <h2>Set Birthyear</h2>
             <form onSubmit={submit}>
                 <div>
@@ -31,7 +32,7 @@ const EditYear = ({ editAuthor, authors }) => {
                 Born &nbsp;
                 <input type='number' name='born' />
                 </div>
-                <button type='submit'>Update Author</button>
+                <Button compact type='submit'>Update Author</Button>
             </form>
         </div>      
     )

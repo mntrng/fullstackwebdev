@@ -1,30 +1,29 @@
 import React from 'react'
+import { Container, Table } from 'semantic-ui-react'
 
 const BookTable = ({selectedBooks}) => {
     return (
-        <div>
-            <h2>Books</h2>
-            <table>
-                <tbody>
-                <tr>
-                    <th></th>
-                    <th>
-                    Author
-                    </th>
-                    <th>
-                    Published
-                    </th>
-                </tr>
-                {selectedBooks.map(a =>
-                    <tr key={a.title}>
-                    <td>{a.title}</td>
-                    <td>{a.author.name}</td>
-                    <td>{a.published}</td>
-                    </tr>
-                )}
-                </tbody>
-            </table>
-        </div>
+        <Container style={{ marginBottom: 20 }}>
+            <Table striped>
+                <Table.Header>
+                    <Table.Row>
+                    <Table.HeaderCell></Table.HeaderCell>
+                    <Table.HeaderCell>Author</Table.HeaderCell>
+                    <Table.HeaderCell>Published</Table.HeaderCell>
+                    </Table.Row>
+                </Table.Header>
+
+                <Table.Body>
+                    {selectedBooks.map(a =>
+                    <Table.Row key={a.title}>
+                        <Table.Cell>{a.title}</Table.Cell>
+                        <Table.Cell>{a.author.name}</Table.Cell>
+                        <Table.Cell>{a.published}</Table.Cell>
+                    </Table.Row>
+                    )}
+                </Table.Body>
+            </Table>
+        </Container>
     )
 }
 

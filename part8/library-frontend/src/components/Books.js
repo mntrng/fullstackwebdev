@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react'
+import { Button, Container } from 'semantic-ui-react'
 import BookTable from './BookTable'
 
 const Books = ({show, allBookResults}) => {
@@ -42,17 +43,18 @@ const Books = ({show, allBookResults}) => {
 
   try {
     return (
-      <div>
+      <Container style={{ marginTop: 25 }}>
+        <h2>Books</h2>
         <BookTable
           selectedBooks = {selectedBooks}
         />
 
-        {genres.map(genre => 
-          <button key={genre} onClick={() => setGenreOption(genre)}>
+        {genres.map(genre =>
+          <Button compact key={genre} onClick={() => setGenreOption(genre)}>
             {genre}
-          </button>
+          </Button>
         )}
-      </div>
+      </Container>
     )
   } catch (error) {
     return null
